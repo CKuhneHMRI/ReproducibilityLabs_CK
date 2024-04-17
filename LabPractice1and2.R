@@ -30,7 +30,6 @@
 #/*******************************************************************************
 rm(list=ls())
 library(MASS)
-library(lmer)
 library(lme4)
 library(lmerTest)
 library(dplyr)
@@ -47,10 +46,10 @@ lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
 
 # We vary the sample size from 5 to 40. When we later plot this we will see what the power is at N = 40
 p.matrix = c()
-for (N in seq(5,40,by=5)) { # On this line I setting my sample size. Here I look at sample sizes 5-40 (by 5 person increments). I could set this just to 40 if needed. 
+for (N in seq(45,60,by=5)) { # On this line I setting my sample size. Here I look at sample sizes 5-40 (by 5 person increments). I could set this just to 40 if needed. 
   p.temp.vector = c()
   # We repeat simulation for 500 times for each N (Step 3)
-  for (i in 1:500) {
+  for (i in 1:100) {
     # Set seed
     set.seed(i)
     # Step 1: generate data
@@ -88,12 +87,12 @@ for (N in seq(5,40,by=5)) { # On this line I setting my sample size. Here I look
 # Matrix => data.frame
 p.matrix = p.matrix %>% as.data.frame()
 # Add column names
-names(p.matrix) = seq(5,40,by=5)
+names(p.matrix) = seq(45,60,by=5)
 # Step 4: calculate power
 power = p.matrix %>% summarise_all(function(x) mean(x<0.05))
 
 #plot the distribution of power for sample sized 5 to 40
-plot(seq(5,40,by=5),power,xlab = "Sample size (N)",ylab="Power",type = "b", pch = 19)
+plot(seq(45,60,by=5),power,xlab = "Sample size (N)",ylab="Power",type = "b", pch = 19)
 abline(h=0.8,lty=2)
 
 #Specifically pull out the power for N = 40
